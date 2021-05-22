@@ -1,46 +1,43 @@
 package ui;
 
 import config.GetPropertyValues;
-import java.io.IOException;
 import model.PrintColors;
 import threads.PrintColorsThread;
 
 public class Main {
 
-    private static final PrintColorsThread[] threads = new PrintColorsThread[3];
-    private static int posMouse = 0;
-    
-    public static void main(String[] args) throws InterruptedException, IOException {
+    private static PrintColorsThread[] t = new PrintColorsThread[3];
+
+    public static void main(String[] args) throws InterruptedException {
         GetPropertyValues pv = new GetPropertyValues();
-        System.out.println(pv.getSleep());
-        System.out.print("\u001b[" + "2J");//Clear screen
-        
+        pv.setColors();
+        int[] colors = pv.getColor();
+
+        PrintColors pc1 = new PrintColors(colors[0]);
+        PrintColors pc2 = new PrintColors(colors[1]);
+        PrintColors pc3 = new PrintColors(colors[2]);
+
+        setThreads(pv, pc1, pc2, pc3);
+
+        System.out.print("\u001b[" + "2J"); //Clear Screen
+
+        startThreads(t);
+    }
+
+    public static void setThreads(GetPropertyValues pv, PrintColors pc1, PrintColors pc2, PrintColors pc3) {
         pv.setFirstPart();
-        PrintColors p1 = new PrintColors(pv.getLength(), pv.getWidth(), pv.getColor(), pv.getSleep(), 0);
-        
-        posMouse = pv.getLength();
-        
+        t[0] = new PrintColorsThread(pc1, 1, pv.getLength(), pv.getSleep());
+        int aux = pv.getLength() + 1;
         pv.setSecondPart();
-        PrintColors p2 = new PrintColors(pv.getLength(), pv.getWidth(), pv.getColor(), pv.getSleep(), posMouse + 1);
-        
-        posMouse += pv.getLength();
-        
+        t[1] = new PrintColorsThread(pc2, aux, pv.getLength(), pv.getSleep());
+        aux += pv.getLength();
         pv.setThirdPart();
-        PrintColors p3 = new PrintColors(pv.getLength(), pv.getWidth(), pv.getColor(), pv.getSleep(), posMouse + 1);
-        
-        setThreads(p1, p2, p3);
-        startThreads();
+        t[2] = new PrintColorsThread(pc3, aux, pv.getLength(), pv.getSleep());
     }
 
-    public static void setThreads(PrintColors p1, PrintColors p2, PrintColors p3) {
-        threads[0] = new PrintColorsThread(threads, p1);
-        threads[1] = new PrintColorsThread(threads, p2);
-        threads[2] = new PrintColorsThread(threads, p3);
-    }
-
-    public static void startThreads() {
-        for (int i = 0; i < threads.length; i++) {
-            threads[i].start();
+    public static void startThreads(PrintColorsThread[] t) {
+        for (int i = 0; i < t.length; i++) {
+            t[i].start();
         }
     }
 }

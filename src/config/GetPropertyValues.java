@@ -1,17 +1,16 @@
 package config;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.io.FileInputStream;
 
 public class GetPropertyValues {
 
+    private int[] color = new int[3];
     private static Properties prop;
     private int length;
     private int width;
-    private int color;
     private int sleep;
 
     public GetPropertyValues() {
@@ -30,7 +29,7 @@ public class GetPropertyValues {
         return width;
     }
 
-    public int getColor() {
+    public int[] getColor() {
         return color;
     }
 
@@ -50,24 +49,27 @@ public class GetPropertyValues {
         }
     }
 
+    public void setColors() {
+        color[0] = Integer.parseInt(prop.getProperty("FIRST_COLOR"));
+        color[1] = Integer.parseInt(prop.getProperty("SECOND_COLOR"));
+        color[2] = Integer.parseInt(prop.getProperty("THIRD_COLOR"));
+    }
+
     public void setFirstPart() {
         length = Integer.parseInt(prop.getProperty("FIRST_LENGTH"));
         width = Integer.parseInt(prop.getProperty("FIRST_WIDTH"));
-        color = Integer.parseInt(prop.getProperty("FIRST_COLOR"));
-        sleep = Integer.parseInt(prop.getProperty("SLEEP_TIME"));
+        sleep = Integer.parseInt(prop.getProperty("FIRST_SLEEP_TIME"));
     }
 
     public void setSecondPart() {
         length = Integer.parseInt(prop.getProperty("SECOND_LENGTH"));
         width = Integer.parseInt(prop.getProperty("SECOND_WIDTH"));
-        color = Integer.parseInt(prop.getProperty("SECOND_COLOR"));
-        sleep = Integer.parseInt(prop.getProperty("SLEEP_TIME"));
+        sleep = Integer.parseInt(prop.getProperty("SECOND_SLEEP_TIME"));
     }
 
     public void setThirdPart() {
         length = Integer.parseInt(prop.getProperty("THIRD_LENGTH"));
         width = Integer.parseInt(prop.getProperty("THIRD_WIDTH"));
-        color = Integer.parseInt(prop.getProperty("THIRD_COLOR"));
-        sleep = Integer.parseInt(prop.getProperty("SLEEP_TIME"));
+        sleep = Integer.parseInt(prop.getProperty("THIRD_SLEEP_TIME"));
     }
 }
